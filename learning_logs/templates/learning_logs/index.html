@@ -1,6 +1,20 @@
 {% extends "learning_logs/base.html" %}
 <!--  -->
-{% block page_header %}
+{% block page_header %} {% if user.is_authenticated %}
+<h2>What I'm thinking lately...</h2>
+<ul>
+  {% for topic in topics %}
+  <li>
+    <a href="{% url 'learning_logs:topic' topic.id %}">{{topic.text}}</a>
+  </li>
+  {% empty %}
+  <li>
+    No topics yet.
+    <a href="{% url 'learning_logs:new_topic' %}">Add a new topic</a>
+  </li>
+  {% endfor %}
+</ul>
+{% else %}
 <div class="jumbotron">
   <h1 class="display-3">Track your learning.</h1>
   <p class="lead">
@@ -15,5 +29,4 @@
     >Register &raquo;</a
   >
 </div>
-
-{% endblock page_header %}
+{% endif %} {% endblock page_header %}

@@ -7,6 +7,14 @@ from .forms import TopicForm, EntryForm
 
 def index(request):
     """The home page for Learning Log."""
+    if request.user.is_authenticated:
+        topics = Topic.objects.filter(owner=request.user).order_by('-date_added')   
+        context = {'topics': topics, 'user_logged_in': True}   
+        return render(request, 'learning_logs/index.html', context)  
+        
+    else:
+        context = {'user_logged_in': False}
+        
     return render(request, 'learning_logs/index.html')
 
 @login_required
@@ -15,6 +23,7 @@ def topics(request):
     topics = Topic.objects.filter(owner=request.user).order_by('date_added')
     context = {'topics': topics}
     return render(request, 'learning_logs/topics.html', context)
+
 
 @login_required
 def topic(request, topic_id):
